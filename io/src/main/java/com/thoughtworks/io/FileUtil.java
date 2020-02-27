@@ -19,9 +19,10 @@ public class FileUtil {
     }
 
     public static void copyDirectory(File from, File to) throws IOException {
-        if (!to.exists()) {
-            to.mkdirs();
+        if (to.exists()) {
+            deleteDir(to);
         }
+        to.mkdirs();
         File[] files = from.listFiles();
         for (File fileName : files) {
             if (fileName.isDirectory()) {
@@ -29,13 +30,24 @@ public class FileUtil {
             } else {
                 File copyFile = new File(to, fileName.getName());
                 copyFile.createNewFile();
-                FileOutputStream fos = new FileOutputStream(copyFile);
-                FileInputStream fis = new FileInputStream(fileName);
-                int len = 0;
-                while ((len = fis.read()) != -1) {
-                    fos.write(len);
-                }
+                copyFile(fileName, copyFile);
             }
+        }
+    }
+
+    public static void deleteDir(File fileDelete) {
+        File[] files = fileDelete.listFiles();
+        for (File file :files) {
+            file.delete();
+        }
+    }
+
+    public static void copyFile(File from, File to) throws IOException {
+        FileOutputStream fos = new FileOutputStream(to);
+        FileInputStream fis = new FileInputStream(from);
+        int len = 0;
+        while ((len = fis.read()) != -1) {
+            fos.write(len);
         }
     }
 }
