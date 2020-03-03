@@ -38,7 +38,12 @@ public class FileUtil {
     public static void deleteDir(File fileDelete) {
         File[] files = fileDelete.listFiles();
         for (File file :files) {
-            file.delete();
+            if (file.isFile()) {
+                file.delete();
+            } else {
+                deleteDir(file);
+                file.delete();
+            }
         }
     }
 
@@ -49,6 +54,8 @@ public class FileUtil {
         while ((len = fis.read()) != -1) {
             fos.write(len);
         }
+        fos.close();
+        fis.close();
     }
 }
 
